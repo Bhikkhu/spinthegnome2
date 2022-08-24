@@ -15,15 +15,15 @@ function importAll(r) {
   return images;
 }
 
-const getRandomProperty = (obj) => {
+const getRandomValue = (obj) => {
   let keys = Object.keys(obj);
   return obj[keys[Math.floor(Math.random() * keys.length)]];
 };
 
 const gnomeImages = importAll(require.context('./images/gnomes', false, /\.(jfif|png|jpe?g|svg|gif)$/));
-const spinningGnome = getRandomProperty(gnomeImages);
+const spinningGnome = getRandomValue(gnomeImages);
 
-const socket = io('localhost:3001');
+const socket = io('192.168.1.6:3001');
 const disconnectedGnomeMarkup = <p><span style = {{color:'red'}}>AUGH!</span> disconnected.</p>
 const connectedGnomeMarkup = <p><span style = {{color:'green'}}>connected ;)</span></p>
 function App() {
@@ -31,6 +31,9 @@ function App() {
   const [lastMessage, setLastMessage] = useState(null);
   const [connectedGnomePicture, setConnectedGnomePicture] = useState(disconnectedGnome);
   const [connectedGnomeText, setConnectedGnomeText] = useState(disconnectedGnomeMarkup);
+  const [scrollingText, setScrollingText] = useState('this is a test of the magicical scrolling text. would you just look at it go?');
+  const [username, setUsername] = useState('');
+  document.body.style.backgroundColor = "rgb(133, 255, 129)";
   useEffect(() => {
     socket.on('connect', () => {
       setIsConnected(true);
@@ -45,6 +48,12 @@ function App() {
     socket.on('message', data => {
       setLastMessage(data);
     });
+    socket.on('set username', data => {
+      setUsername(data);
+    });
+    socket.on('disco', data => {
+      console.log("disco!", data);
+    });
     return () => {
       socket.off('connect');
       socket.off('disconnect');
@@ -55,7 +64,7 @@ function App() {
   const sendMessage = () => {
     socket.emit('hello!');
   }
-  const dancingGnome = <Col xs lg = "2"><img width = '100px' src = {gnomeImages['santa-fun.gif']}/></Col>;
+  const dancingGnome = <Col xs lg = "2"><img width = '100%' src = {gnomeImages['santa-fun.gif']}/></Col>;
   return (
     <Container style = {{textAlign:'center'}}>
       <Row>
@@ -64,6 +73,16 @@ function App() {
         <h1>Welcome to <span className = 'rainbow-text'>SPINTHEGNO.ME</span></h1>
         </Col>
         {dancingGnome}
+      </Row>
+      <Row>
+        <Col>
+        <div id="scroll-container"><div id="scroll-text">{scrollingText}</div></div>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <p>Your name is <strong>{username}</strong>.</p>
+        </Col>
       </Row>
       <Row>
         <Col className="text-center">

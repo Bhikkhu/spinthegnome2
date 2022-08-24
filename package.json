@@ -7,6 +7,9 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "bootstrap": "^5.2.0",
+    "mongodb": "^4.9.0",
+    "mongoose": "^6.5.2",
+    "nodemon": "^2.0.19",
     "react": "^16.13.1",
     "react-bootstrap": "^2.5.0",
     "react-dom": "^16.13.1",
@@ -16,7 +19,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start-server": "node server.js",
+    "start-server": "nodemon server.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
